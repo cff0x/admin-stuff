@@ -24,7 +24,7 @@ CSR_HASH="sha512"
 # certificate output paths
 CERT_FILE="$(pwd)/ssl/certs/${CERT_DOMAIN}/cert.pem"
 CHAIN_FILE="$(pwd)/ssl/certs/${CERT_DOMAIN}/chain.pem"
-FULLCHAIN_FILE="$(pwd)/ssl/certs/${CERT_DMAIN}/fullchain.pem"
+FULLCHAIN_FILE="$(pwd)/ssl/certs/${CERT_DOMAIN}/fullchain.pem"
 
 # certbot working directories
 CONFIG_DIR="$(pwd)/config"
