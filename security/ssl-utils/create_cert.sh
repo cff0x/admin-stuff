@@ -40,12 +40,12 @@ mkdir -p ./ssl/{certs,private}/${CERT_DOMAIN}
 function check_privkey_file() {
   echo "Checking private key file..."
 
-  if [ -f $1 ]; then
+  if [ -f ${1} ]; then
     read -p "Private key file already exists, overwrite (y/n)?" choice
     case "$choice" in
       y|Y ) return 1;;
       n|N ) return 0;;
-      * ) echo "Invalid input"; check_privkey_file $1;;
+      * ) echo "Invalid input"; check_privkey_file ${1};;
     esac
   fi
 
@@ -54,12 +54,12 @@ function check_privkey_file() {
 
 # args: [privkey_file, privkey_curve]
 function generate_privkey() {
-  check_privkey_file $1
+  check_privkey_file ${1}
   local result=$?
 
   if [ $result -eq 1 ]; then
     echo "Generating new private key file with curve $2"
-    openssl ecparam -genkey -name $2 -out $1 -outform pem
+    openssl ecparam -genkey -name ${2} -out ${1} -outform pem
   fi
 }
 
@@ -67,27 +67,28 @@ function generate_privkey() {
 function create_openssl_config() {
   echo "Creating OpenSSL config file..."
 
-  tmp_config="[req]\nprompt=no\nencrypt_key=no\ndefault_md=$3\
+  tmp_config="[req]\nprompt=no\nencrypt_key=no\ndefault_md=${3}\
               \ndistinguished_name=dname\nreq_extensions=reqext\n\
-              \n[dname]\nCN=$1\nemailAddress=$2\n\
-              \n[reqext]\nsubjectAltName=DNS:$1,DNS:*.$1"
+              \n[dname]\nCN=${1}\nemailAddress=${2}\n\
+              \n[reqext]\nsubjectAltName=DNS:${1},DNS:*.${1}"
 
-  echo -e $tmp_config > $4
+  echo -e ${tmp_config} > ${4}
 }
 
 # args: [config_file, privkey_file, csr_file]
 function generate_csr() {
   echo "Generating certificate signing request using config file $1..."
-  openssl req -new -config $1 -key $2 -out $3
+  openssl req -new -config ${1} -key ${2} -out ${3}
 }
 
 # args: [acme_type, acme_server, cert_domain, cert_email, csr_file, config_dir,
 #        work_dir, log_dir, cert_file, chain_file, fullchain_file]
 function request_cert() {
   certbot certonly\
-          --manual --agree-tos --preferred-challenges $1 --server "$2"\
-          -d "$3,*.$3" -m $4 --csr $5 --config-dir $6 --work-dir $7\
-          --logs-dir $8 --cert-path $9 --chain-path $10 --fullchain-path $11
+          --manual --agree-tos --preferred-challenges ${1} --server "${2}"\
+          -d "${3},*.${3}" -m ${4} --csr ${5}\
+          --config-dir ${6} --work-dir ${7} --logs-dir ${8}\
+          --cert-path ${9} --chain-path ${10} --fullchain-path ${11}
 }
 
 generate_privkey      $PRIVKEY_FILE $PRIVKEY_CURVE
