@@ -59,7 +59,7 @@ function generate_privkey() {
 
   if [ $result -eq 1 ]; then
     echo "Generating new private key file with curve $2"
-    openssl ecparam -genkey -name ${2} -out ${1} -outform pem
+    openssl ecparam -genkey -name ${2} | openssl ec -aes256 -out ${1}
   fi
 }
 
