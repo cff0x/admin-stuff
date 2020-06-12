@@ -71,6 +71,7 @@ function generate_privkey() {
     else
       echo "Private key type ${PRIVKEY_TYPE} is unknown. Valid values: ecdsa, rsa"
       exit 1
+    fi
   fi
 }
 
