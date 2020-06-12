@@ -68,7 +68,9 @@ function generate_privkey() {
     elif [ $PRIVKEY_TYPE = "rsa" ]; then
       echo "Generating new ${PRIVKEY_TYPE} private key file with a key length of ${PRIVKEY_KEYLENGTH}"
       openssl genrsa -des3 -out ${1} ${PRIVKEY_KEYLENGTH}
-    fi
+    else
+      echo "Private key type ${PRIVKEY_TYPE} is unknown. Valid values: ecdsa, rsa"
+      exit 1
   fi
 }
 
